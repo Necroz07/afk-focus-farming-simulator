@@ -1,51 +1,34 @@
-import time, random
+import random, pygame
 
-class timer():
 
+
+class Game:
     def __init__(self):
+        self.gamestate='Menu'
         self.elapsed=0
         self.running=False
         self.start_time= 0
 
-    def start(self):
-        if not self.running:
-            self.running=True
-            self.start_time= time.time()
-
-    def pause(self):
-        if self.running:
-            self.elapsed += ((time.time()) - self.start_time)
-            self.running=False
-
-    def get_time(self):
-        if self.running:
-            return self.elapsed + ((time.time()) - self.start_time)
-        return self.elapsed
-
-
-
-
-
-
-class game():
-    def __init__(self):
-        self.gamestate='Menu'
-        self.timer= timer()
-
     def total_time(self):
-        return self.timer.get_time()
+        if self.running:
+            return self.elapsed + ((pygame.time.get_ticks()) - self.start_time)
+        return self.elapsed
     
     def main(self):
         self.gamestate='Main'
-        self.timer.start()
-
+        if not self.running:
+            self.running=True
+            self.start_time= pygame.time.get_ticks()
     def pause(self):
         self.gamestate='Pause'
-        self.timer.pause()
+        if self.running:
+            self.elapsed += ((pygame.time.get_ticks()) - self.start_time)
+            self.running=False
 
     def end(self):
         self.gamestate='END'
-        self.timer.pause()
+        self.pause()
+        
         return self.total_time()
 
     
@@ -53,14 +36,18 @@ class game():
 
 
 
-class enemy():
+class enemy:
     def __init__(self, mini, maxi):
         self.strength= random.randint(mini, maxi)
 
 
 
 
-class session():
+
+
+
+
+class session:
     def __init__(self, game, surplus):
         #self.troops = ((game.total_time())/60)
         self.troops = 0
@@ -79,7 +66,7 @@ class session():
         return round_result, self.surplus
 
         
-
+'''
 if __name__ == "__main__":
     g= game()
 
@@ -97,5 +84,4 @@ if __name__ == "__main__":
         sesh.troops= tim
         result, surplus = sesh.result(e)
         print(result, surplus)
-
-
+'''
